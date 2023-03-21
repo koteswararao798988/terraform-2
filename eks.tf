@@ -35,3 +35,17 @@ resource "aws_iam_role" "eks_cluster" {
   })
 }
 resource "aws_launch_configuration" "zonal" {
+  name_prefix   = "zonal-eks-cluster"
+  image_id      = "ami-0f8ca728008ff5af4"
+  instance_type = "t2.micro"
+}
+
+resource "aws_autoscaling_group" "zonal-auto" {
+  name                 = "zonal-cluster"
+  launch_configuration = aws_launch_configuration.zonal.name
+  vpc_zone_identifier  = ["subnet-0ddd511fd0616c8d7","subnet-0077c377ff938bcc7"]
+  desired_capacity     = 1
+  min_size             = 1
+  max_size             = 2
+
+}
